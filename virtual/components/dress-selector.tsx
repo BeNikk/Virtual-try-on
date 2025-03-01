@@ -14,40 +14,28 @@ const dresses = [
     id: 1,
     name: "Elegant Evening Gown",
     image:
-      "/dress1.avif"
+      "/dress11.jpg"
   },
   {
     id: 2,
     name: "Summer Floral Dress",
     image:
-    "/dress2.avif"
+    "/dress12.jpg"
   },
   {
     id: 3,
     name: "Casual Attire",
     image:
-    "/dress3.avif"
+    "/dress14.jpg"
   },
   {
     id: 4,
     name: "Formal Blazer",
     image:
-    "/dress6.avif"
+    "/dress13.jpg"
 
   },
-  {
-    id: 5,
-    name: "Designer Gown",
-    image:
-    "/dress5.avif"
-  },
-  {
-    id: 6,
-    name: "Casual Chic Outfit",
-    image:
-    "/dress4.avif"
-
-  },
+ 
 ]
 
 export default function DressSelector({ onDressSelect, selectedDress }: DressSelectorProps) {

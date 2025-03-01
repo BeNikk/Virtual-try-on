@@ -39,7 +39,11 @@ export default function TryOnSection() {
       if (clothImage) {
         formData.append("garmentImage", clothImage);
       } else if (selectedDress) {
-        formData.append("garmentImage", selectedDress);
+        const response = await fetch(selectedDress);
+      const blob = await response.blob();
+      const file = new File([blob], "selected_dress.jpg", { type: blob.type });
+
+      formData.append("garmentImage", file);
       }
 
       const response = await fetch("http://localhost:5000/tryon", {
@@ -53,9 +57,9 @@ export default function TryOnSection() {
       }
 
       const data = await response.json();
-
-      if (data?.result?.image_url) {
-        setResultImage(data.result.image_url);
+      console.log(data);
+      if (data) {
+        setResultImage(data);
         toast.success("Try-on image generated successfully!");
       } else {
         throw new Error("Try-on image processing failed.");
@@ -126,12 +130,9 @@ export default function TryOnSection() {
           <Card className="border-0 shadow-lg overflow-hidden">
             <CardContent className="p-6">
               <h3 className="text-2xl font-semibold mb-6 tracking-tight">Choose Outfit</h3>
-              <Tabs defaultValue="gallery" className="w-full">
+              <Tabs defaultValue="upload" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="gallery">
-                    <Shirt className="mr-2 h-4 w-4" />
-                    Gallery
-                  </TabsTrigger>
+
                   <TabsTrigger value="upload">
                     <ImageIcon className="mr-2 h-4 w-4" />
                     Upload Outfit
