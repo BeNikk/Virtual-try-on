@@ -24,8 +24,8 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="mb-6 italic">
-                "This app has completely changed how I shop online. I can see exactly how clothes will look on me before
-                buying. It's saved me so much time and money on returns!"
+                This app has completely changed how I shop online. I can see exactly how clothes will look on me before
+                buying. It's saved me so much time and money on returns!
               </p>
               <div className="flex items-center">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
@@ -53,8 +53,8 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="mb-6 italic">
-                "The realism is incredible! I couldn't believe how accurate the virtual try-ons were. It's like having a
-                personal stylist in my pocket. Absolutely worth every penny."
+                The realism is incredible! I couldn't believe how accurate the virtual try-ons were. It's like having a
+                personal stylist in my pocket. Absolutely worth every penny.
               </p>
               <div className="flex items-center">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
@@ -82,8 +82,8 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="mb-6 italic">
-                "As a boutique owner, this app has revolutionized our online presence. Our customers love being able to
-                virtually try on our latest collections, and our return rate has dropped by 78%!"
+                As a boutique owner, this app has revolutionized our online presence. Our customErs love being able to
+                virtually try on our latest collections, and our return rate has dropped by 78%!
               </p>
               <div className="flex items-center">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
