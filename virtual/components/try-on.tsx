@@ -46,7 +46,7 @@ export default function TryOnSection() {
       formData.append("garmentImage", file);
       }
 
-      const response = await fetch("http://localhost:5000/tryon", {
+      const response = await fetch("https://virtual-try-on-4nzq.onrender.com/tryon", {
         method: "POST",
         body: formData,
       });
