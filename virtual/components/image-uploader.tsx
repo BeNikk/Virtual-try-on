@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 interface ImageUploaderProps {
-  onImageUpload: (imageDataUrl: string) => void
+  onImageUpload: (file: File) => void // ✅ Change to File
 }
 
 export default function ImageUploader({ onImageUpload }: ImageUploaderProps) {
@@ -19,12 +19,14 @@ export default function ImageUploader({ onImageUpload }: ImageUploaderProps) {
       if (!file) return
 
       const reader = new FileReader()
-      reader.onload = () => {
-        const dataUrl = reader.result as string
-        setPreview(dataUrl)
-        onImageUpload(dataUrl)
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setPreview(reader.result)
+        }
       }
       reader.readAsDataURL(file)
+
+      onImageUpload(file) // ✅ Pass File instead of Base64 string
     },
     [onImageUpload],
   )
@@ -40,6 +42,7 @@ export default function ImageUploader({ onImageUpload }: ImageUploaderProps) {
 
   const clearImage = () => {
     setPreview(null)
+    onImageUpload(null as unknown as File) // ✅ Clear file
   }
 
   return (
@@ -61,7 +64,7 @@ export default function ImageUploader({ onImageUpload }: ImageUploaderProps) {
         </div>
       ) : (
         <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden">
-          <Image src={preview || "/placeholder.svg"} alt="Preview" fill className="object-cover" />
+          <Image src={preview} alt="Preview" fill className="object-cover" />
           <Button
             size="icon"
             variant="destructive"
@@ -75,4 +78,3 @@ export default function ImageUploader({ onImageUpload }: ImageUploaderProps) {
     </div>
   )
 }
-

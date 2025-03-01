@@ -9,70 +9,81 @@ import ImageUploader from "@/components/image-uploader"
 import DressSelector from "@/components/dress-selector"
 import LoadingAnimation from "@/components/loading-animation"
 import { toast } from "sonner"
-import { fal } from "@fal-ai/client";
-
 
 export default function TryOnSection() {
-  const [userImage, setUserImage] = useState<string | null>(null)
-  const [clothImage, setClothImage] = useState<string | null>(null)
+  const [userImage, setUserImage] = useState<File | null>(null)
+  const [clothImage, setClothImage] = useState<File | null>(null)
   const [selectedDress, setSelectedDress] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [resultImage, setResultImage] = useState<any>(null)
-  fal.config({
-    proxyUrl: "/api/fal/proxy", //
-  });
+  const [resultImage, setResultImage] = useState<string | null>(null)
+
   const handleTryOn = async () => {
     if (!userImage || (!selectedDress && !clothImage)) {
       toast.error("Please upload an image and select a dress.");
       return;
     }
+
     setIsProcessing(true);
+    setResultImage(null);
+
     try {
-      const result = await fal.subscribe("fashn/tryon", {
-        input: {
-          model_image: userImage,
-          garment_image: clothImage || selectedDress ||"/heroine.avif",
-          category: "tops",
-          timesteps: 50,
-          guidance_scale: 2,
-          nsfw_filter: true,
-          garment_photo_type: "auto",
-          num_samples: 1,
-          seed: 42,
-        },
-        pollInterval: 5000,
-        logs: true,
+      const formData = new FormData();
+      formData.append("category", "tops");
+
+      // Add model image
+      if (userImage) {
+        formData.append("modelImage", userImage);
+      }
+
+      // Add garment image
+      if (clothImage) {
+        formData.append("garmentImage", clothImage);
+      } else if (selectedDress) {
+        formData.append("garmentImage", selectedDress);
+      }
+
+      const response = await fetch("http://localhost:5000/tryon", {
+        method: "POST",
+        body: formData,
       });
-      console.log(result);
-      toast.success("Try-on image generated successfully!");
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate try-on image.");
+      }
+
+      const data = await response.json();
+
+      if (data?.result?.image_url) {
+        setResultImage(data.result.image_url);
+        toast.success("Try-on image generated successfully!");
+      } else {
+        throw new Error("Try-on image processing failed.");
+      }
     } catch (error) {
-      toast.error("Try-On Failed. Please try again.");
+      toast.error(`Try-On Failed: ${error instanceof Error ? error.message : "Please try again."}`);
       console.error("Error:", error);
     } finally {
       setIsProcessing(false);
     }
   };
 
-  
+  const handleImageUpload = (file: File) => {
+    setUserImage(file);
+    setResultImage(null);
+  };
 
-  const handleImageUpload = (imageDataUrl: string) => {
-    setUserImage(imageDataUrl)
-    setResultImage(null)
-  }
-
-  const handleClothUpload = (imageDataUrl: string) => {
-    setClothImage(imageDataUrl)
-    setSelectedDress(null)
-    setResultImage(null)
-  }
+  const handleClothUpload = (file: File) => {
+    setClothImage(file);
+    setSelectedDress(null);
+    setResultImage(null);
+  };
 
   const handleDressSelect = (dressUrl: string) => {
-    setSelectedDress(dressUrl)
-    setClothImage(null)
-    setResultImage(null)
-  }
-
-
+    setSelectedDress(dressUrl);
+    setClothImage(null);
+    setResultImage(null);
+  };
 
   return (
     <section id="try-on-section" className="w-full py-20 bg-gradient-to-b from-muted/30 to-background">
@@ -154,8 +165,22 @@ export default function TryOnSection() {
             )}
           </Button>
         </div>
+
+        {resultImage && (
+          <div className="mt-12 flex justify-center">
+            <Card className="border-0 shadow-lg overflow-hidden max-w-md">
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-semibold mb-6 tracking-tight text-center">Your Virtual Try-On</h3>
+                <img 
+                  src={resultImage} 
+                  alt="Virtual try-on result" 
+                  className="rounded-lg w-full shadow-md" 
+                />
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </section>
   )
 }
-
