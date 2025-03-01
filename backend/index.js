@@ -38,9 +38,10 @@ app.post("/tryon", upload.fields([{ name: "modelImage" }, { name: "garmentImage"
         }
       },
     });
-    console.log(result);
+    const photo = result.data.images[0].url;
+    console.log(result.data.images[0].url);
 
-    res.json({ result: result.data, requestId: result.requestId });
+    res.json(photo);
   } catch (error) {
     console.error("Error processing try-on:", error);
     res.status(500).json({ error: "Internal server error" });
