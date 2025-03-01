@@ -15,6 +15,10 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 fal.config({ credentials: process.env.FAL_KEY });
+
+app.get('/',async(req,res)=>{
+    res.json({message:"hello world"})
+})
 app.post("/tryon", upload.fields([{ name: "modelImage" }, { name: "garmentImage" }]), async (req, res) => {
   try {
     console.log("hitting");
